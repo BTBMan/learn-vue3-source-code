@@ -1,1 +1,1 @@
-export * from './exportTest';
+export * from './rollup-test';
