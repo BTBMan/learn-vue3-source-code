@@ -1,23 +1,28 @@
-export const reactiveMap = new WeakMap(); // 存放所有依赖
+// export
+const reactiveMap = new WeakMap(); // 用来缓存已经创建过的reactive
 
-export function reactive(target) {
+// export
+function reactive(target) {
   // 当用户使用reactive的时候 就会返回一个创建的reactive的对象
   return createReactiveObject(target, reactiveMap);
 }
 
 // 创建reactive对象的方法单独抽离 以便共用逻辑
 function createReactiveObject(target, proxyMap) {
-  // 首先找一下是否存在这个reactive
-
+  // 首先在缓存列表里查找是否存在这个reactive
   const existingProxy = proxyMap.get(target);
   if (existingProxy) {
     return existingProxy;
   }
 
   const proxy = new Proxy(target, {
-    get(t, k, r) {},
-    set(t, k, v, r) {
-      return true;
+    get(target, key) {
+      return Reflect.get(target, key);
+    },
+    set(target, key, value) {
+      Reflect.set(target, key, value);
+
+      return false;
     },
   });
   proxyMap.set(target, proxy);
@@ -29,6 +34,22 @@ function createReactiveObject(target, proxyMap) {
 // const obj = {
 //   a: 'a',
 // };
+
+// const reactiveObj = reactive(obj);
+// const reactiveObj1 = reactive(obj);
+// console.log(reactiveObj);
+// reactiveObj.a = 'aa';
+// console.log(reactiveObj);
+// console.log(reactiveObj1);
+// console.log(obj);
+
+// console.log('===========');
+
+// console.log(reactiveObj.a);
+
+// console.log('===========');
+
+// console.log(reactiveObj === reactiveObj1);
 
 // const proxy = new Proxy(obj, {
 //   get(t, k, r) {
