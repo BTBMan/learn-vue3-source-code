@@ -2,6 +2,13 @@ import { mutableHandlers } from './baseHandlers';
 
 export const reactiveMap = new WeakMap(); // 用来缓存已经创建过的reactive
 
+// 建立一组枚举 这些是用来存放被代理过后的对象内部的特有的属性 一般用来判断是否是响应或只读数据 或者被代理的原始的数据的
+export const enum ReactiveFlags {
+  IS_REACTIVE = '__v_isReactive',
+  IS_READONLY = '__v_isReadonly',
+  IS_RAW = '__v_raw',
+}
+
 export function reactive(target) {
   // 当用户使用reactive的时候 就会返回一个创建的reactive的对象
   return createReactiveObject(target, reactiveMap, mutableHandlers);
@@ -20,41 +27,3 @@ function createReactiveObject(target, proxyMap, baseHandlers) {
 
   return proxy;
 }
-
-// test
-const obj = {
-  a: 'a',
-};
-
-const reactiveObj = reactive(obj);
-const reactiveObj1 = reactive(obj);
-console.log(reactiveObj);
-reactiveObj.a = 'aa';
-console.log(reactiveObj);
-console.log(reactiveObj1);
-console.log(obj);
-
-console.log('===========');
-
-console.log(reactiveObj.a);
-
-console.log('===========');
-
-console.log(reactiveObj === reactiveObj1);
-
-// const proxy = new Proxy(obj, {
-//   get(t, k, r) {
-//     console.log(11, t, k, r);
-//   },
-//   set(t, k, v, r) {
-//     console.log(22, t, k, v, r);
-
-//     return false;
-//   },
-// });
-
-// proxy.a;
-// proxy.a = 'c';
-
-// console.log(proxy);
-// console.log(obj);

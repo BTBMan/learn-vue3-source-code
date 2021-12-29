@@ -6,12 +6,16 @@ specifiers:
   '@rollup/plugin-replace': ^3.0.0
   '@rollup/plugin-typescript': ^8.3.0
   '@types/jest': ^27.0.3
+  '@vue/reactivity': ^3.2.26
   jest: ^27.4.5
   rollup: ^2.61.1
   rollup-plugin-sourcemaps: ^0.6.3
   ts-jest: ^27.1.2
   tslib: ^2.3.1
   typescript: ^4.5.4
+
+dependencies:
+  '@vue/reactivity': 3.2.26
 
 devDependencies:
   '@rollup/plugin-commonjs': 21.0.1_rollup@2.61.1
@@ -736,6 +740,16 @@ packages:
     dependencies:
       '@types/yargs-parser': 20.2.1
     dev: true
+
+  /@vue/reactivity/3.2.26:
+    resolution: {integrity: sha512-h38bxCZLW6oFJVDlCcAiUKFnXI8xP8d+eO0pcDxx+7dQfSPje2AO6M9S9QO6MrxQB7fGP0DH0dYQ8ksf6hrXKQ==}
+    dependencies:
+      '@vue/shared': 3.2.26
+    dev: false
+
+  /@vue/shared/3.2.26:
+    resolution: {integrity: sha512-vPV6Cq+NIWbH5pZu+V+2QHE9y1qfuTq49uNWw4f7FDEeZaDU2H2cx5jcUZOAKW7qTrUS4k6qZPbMy1x4N96nbA==}
+    dev: false
 
   /abab/2.0.5:
     resolution: {integrity: sha512-9IK9EadsbHo6jLWIpxpR6pL0sazTXV6+SQv25ZB+F7Bj9mJNaOc4nCRabwd5M/JwmUa8idz6Eci6eKfJryPs6Q==}
