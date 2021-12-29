@@ -24,6 +24,8 @@ export function readonly(target) {
 
 // 创建reactive对象的方法单独抽离 以便共用逻辑
 function createReactiveObject(target, proxyMap, baseHandlers) {
+  console.log('createReactiveObject=====>', target);
+
   // 首先在缓存列表里查找是否存在这个reactive
   const existingProxy = proxyMap.get(target);
   if (existingProxy) {

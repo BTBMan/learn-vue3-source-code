@@ -1,21 +1,42 @@
 import { reactive } from '../src/index';
+import { readonly } from '../src/reactive';
 
 describe('reactive', () => {
-  test('test', () => {
-    expect(1 + 1).toBe(2);
-
-    const obj = {
+  test('Object', () => {
+    const original = {
       a: 'a',
       b: {
         c: 'c',
       },
     };
 
-    const data1 = reactive(obj);
+    const observed = reactive(original);
 
-    // data1.a = 'b';
+    expect(observed.a).toBe('a');
 
-    data1.b.c;
-    data1.b.c;
+    expect(observed.b).toStrictEqual({
+      c: 'c',
+    });
+  });
+
+  test('readonly', () => {
+    const original: any = {
+      a: 'a',
+      b: {
+        c: 'c',
+      },
+    };
+
+    const observed = readonly(original);
+
+    expect(observed.a).toBe('a');
+
+    expect(observed.b).toStrictEqual({
+      c: 'c',
+    });
+
+    observed.a = 'aa';
+    observed.b = 'bb';
+    observed.b = {};
   });
 });

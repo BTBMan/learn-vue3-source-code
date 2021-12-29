@@ -15,6 +15,8 @@ function createGetter(isReadonly = false, shallow = false) {
     const isExistInReadonlyMap = () =>
       key === ReactiveFlags.IS_RAW && receiver === readonlyMap.get(target);
 
+    console.log('getter======>', target, key, receiver);
+
     if (key === ReactiveFlags.IS_REACTIVE) {
       return !isReadonly;
     } else if (key === ReactiveFlags.IS_READONLY) {
