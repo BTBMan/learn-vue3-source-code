@@ -1,7 +1,8 @@
-import { mutableHandlers, readonlyHandlers } from './baseHandlers';
+import { mutableHandlers, readonlyHandlers, shallowReadonlyHandlers } from './baseHandlers';
 
 export const reactiveMap = new WeakMap(); // 用来缓存已经创建过的正常的reactive
 export const readonlyMap = new WeakMap(); // 用来缓存已经创建过的readonly
+export const shallowReadonlyMap = new WeakMap(); // 用来缓存已经创建过的shallowReadonly
 
 // 建立一组枚举 这些是用来存放被代理过后的对象内部的特有的属性 一般用来判断是否是响应或只读数据 或者被代理的原始的数据的
 export const enum ReactiveFlags {
@@ -20,6 +21,12 @@ export function reactive(target) {
 export function readonly(target) {
   // 当用户使用readonly的时候 就会返回一个创建的readonly的对象
   return createReactiveObject(target, readonlyMap, readonlyHandlers);
+}
+
+// 创建一个shallowReadonly类型的数据
+export function shallowReadonly(target) {
+  // 当用户使用shallowReadonly的时候 就会返回一个创建的shallowReadonly的对象
+  return createReactiveObject(target, shallowReadonlyMap, shallowReadonlyHandlers);
 }
 
 // 创建reactive对象的方法单独抽离 以便共用逻辑

@@ -4,7 +4,12 @@
 
 ## TODO List
 
-- [ ] xxx
-- [ ] xxx
-- [ ] xxx
-- [ ] xxx
+1. reactivity
+  - [x] reactive
+  - [x] readonly
+  - [x] shallowReadonly
+  - [ ] ref
+  - [ ] isProxy
+  - [ ] isReadonly
+  - [ ] isReactive
+  - [ ] toRaw
