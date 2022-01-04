@@ -9,7 +9,7 @@
   - [x] readonly
   - [x] shallowReadonly
   - [ ] ref
-  - [ ] isProxy
-  - [ ] isReadonly
-  - [ ] isReactive
-  - [ ] toRaw
+  - [x] isProxy
+  - [x] isReadonly
+  - [x] isReactive
+  - [x] toRaw

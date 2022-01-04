@@ -1,4 +1,12 @@
-import { reactive, readonly, shallowReadonly, isReactive, isReadonly, toRaw } from '../src/index';
+import {
+  reactive,
+  readonly,
+  shallowReadonly,
+  isReactive,
+  isReadonly,
+  toRaw,
+  isProxy,
+} from '../src/index';
 import { shallowReadonly as sro } from '@vue/reactivity';
 
 describe('reactive', () => {
@@ -20,6 +28,8 @@ describe('reactive', () => {
     expect(isReactive(observed.b)).toBe(true);
     expect(isReactive(observed.arr[0])).toBe(true);
     expect(isReactive(original)).toBe(false);
+    expect(isProxy(observed)).toBe(true);
+    expect(isProxy(original)).toBe(false);
   });
 
   test('readonly', () => {

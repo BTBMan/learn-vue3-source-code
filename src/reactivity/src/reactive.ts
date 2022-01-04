@@ -38,6 +38,11 @@ export function isReactive(value) {
   return !!value[ReactiveFlags.IS_REACTIVE];
 }
 
+// 简单 通过isReactive和isReadonly来判断就可以了
+export function isProxy(value) {
+  return isReactive(value) || isReadonly(value);
+}
+
 // 判断是否是只读数据
 export function isReadonly(value) {
   // 同 isReactive
