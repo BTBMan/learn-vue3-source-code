@@ -7,3 +7,5 @@ export {
   toRaw,
   isProxy,
 } from './reactive';
+
+export { ref, isRef, unRef } from './ref';
