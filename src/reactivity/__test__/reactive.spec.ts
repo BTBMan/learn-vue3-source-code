@@ -8,6 +8,7 @@ describe('reactive', () => {
       b: {
         c: 'c',
       },
+      arr: [{ d: 'd' }],
     };
 
     const observed = reactive(original);
@@ -16,6 +17,8 @@ describe('reactive', () => {
       c: 'c',
     });
     expect(isReactive(observed)).toBe(true);
+    expect(isReactive(observed.b)).toBe(true);
+    expect(isReactive(observed.arr[0])).toBe(true);
     expect(isReactive(original)).toBe(false);
   });
 
