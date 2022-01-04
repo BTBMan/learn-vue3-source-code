@@ -1,4 +1,4 @@
-import { reactive, readonly, shallowReadonly } from '../src/index';
+import { reactive, readonly, shallowReadonly, isReactive, isReadonly, toRaw } from '../src/index';
 import { shallowReadonly as sro } from '@vue/reactivity';
 
 describe('reactive', () => {
@@ -15,6 +15,8 @@ describe('reactive', () => {
     expect(observed.b).toStrictEqual({
       c: 'c',
     });
+    expect(isReactive(observed)).toBe(true);
+    expect(isReactive(original)).toBe(false);
   });
 
   test('readonly', () => {
@@ -30,6 +32,8 @@ describe('reactive', () => {
     expect(observed.b).toStrictEqual({
       c: 'c',
     });
+    expect(isReadonly(observed)).toBe(true);
+    expect(isReadonly(original)).toBe(false);
     // observed.a = 'aa';
     // observed.b = 'bb';
     // observed.b = {};
@@ -48,6 +52,7 @@ describe('reactive', () => {
     expect(observed.b).toStrictEqual({
       c: 'c',
     });
+    expect(isReadonly(observed)).toBe(true);
     // observed.a = 'aa';
     // observed.b = 'bb';
     // observed.b = {};
@@ -87,5 +92,23 @@ describe('reactive', () => {
     proxyObj.b.c = 'cc';
     console.log(proxyObj.b.c);
     console.log(obj);
+  });
+  test('toRaw', () => {
+    const obj = {
+      a: 'a',
+      b: {
+        c: 'c',
+        d: {
+          e: 'e',
+        },
+      },
+    };
+
+    const reactiveObj = reactive(obj);
+    const readonlyObj = readonly(obj);
+
+    expect(toRaw(reactiveObj)).toEqual(obj);
+    expect(toRaw(readonlyObj)).toEqual(obj);
+    expect(toRaw(obj)).toEqual(obj);
   });
 });
