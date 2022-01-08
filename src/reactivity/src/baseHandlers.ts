@@ -1,6 +1,13 @@
-import { ReactiveFlags, reactiveMap, readonly, readonlyMap, shallowReadonlyMap } from './reactive';
 import { isObject } from '../../shared';
-import { reactive } from '.';
+import {
+  reactive,
+  ReactiveFlags,
+  reactiveMap,
+  readonly,
+  readonlyMap,
+  shallowReadonlyMap,
+} from './reactive';
+import { track } from './effect';
 
 const set = createSetter();
 const get = createGetter();
@@ -34,7 +41,7 @@ function createGetter(isReadonly = false, shallow = false) {
 
     // readyonly类型的数据是不会出发依赖的 所以不用收集
     if (!isReadonly) {
-      // TODO 依赖收集操作
+      track(target, 'get', key);
     }
 
     // 如果是shallow类型的话就直接返回得到的数据

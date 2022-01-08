@@ -9,3 +9,5 @@ export {
 } from './reactive';
 
 export { ref, isRef, unRef, proxyRefs } from './ref';
+
+export { effect, track } from './effect';

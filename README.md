@@ -6,6 +6,8 @@
 
 #### Reactivity
 
+##### reactive
+
 - [x] reactive
 - [x] readonly
 - [x] shallowReadonly
@@ -13,7 +15,14 @@
 - [x] isReadonly
 - [x] isReactive
 - [x] toRaw
+
+##### ref
+
 - [x] ref
 - [x] isRef
 - [x] unRef
 - [x] proxyRefs
+
+##### effect
+
+- [ ] effect
