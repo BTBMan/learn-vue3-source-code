@@ -16,4 +16,4 @@
 - [x] ref
 - [x] isRef
 - [x] unRef
-- [ ] proxyRefs
+- [x] proxyRefs

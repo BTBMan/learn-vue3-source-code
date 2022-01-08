@@ -39,7 +39,31 @@ export function convert(value) {
   return isObject(value) ? reactive(value) : value;
 }
 
-// TODO proxyRefs的实现 它并没有对外暴露 只是为了我们在写模板语法的时候 不用我们写.value
+// 它的作用是自动解包对象里的ref数据 这样省去了我们在.value的操作
+// 比如在写template的时候就非常有用
+// 当前顺着这个思路也可以实现reactive下的ref数据自动解包
+const shallowUnwrapHandlers = {
+  get(target, key, receiver) {
+    // 获取值的时候 直接解包
+    return unRef(Reflect.get(target, key, receiver));
+  },
+  set(target, key, value, receiver) {
+    const oldValue = target[key];
+
+    // 首先判断之前的这个key对应的值(oldValue)是不是一个ref
+    // 并且判断当前的设置的值是不是非ref数据
+    // 以上两点都满足要求的话 我们就把老值的value设置为当前的值
+    if (isRef(oldValue) && !isRef(value)) {
+      return (oldValue.value = value);
+    } else {
+      return Reflect.set(target, key, value, receiver);
+    }
+  },
+};
+
+export function proxyRefs(objectWithRefs) {
+  return new Proxy(objectWithRefs, shallowUnwrapHandlers);
+}
 
 // 判断是否是ref数据
 // 很简单 通过value下面的特殊属性判断 如果没有则不是ref数据

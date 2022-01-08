@@ -8,4 +8,4 @@ export {
   isProxy,
 } from './reactive';
 
-export { ref, isRef, unRef } from './ref';
+export { ref, isRef, unRef, proxyRefs } from './ref';
