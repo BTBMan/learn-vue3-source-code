@@ -4,6 +4,7 @@ let activeEffect: any = void 0; // 当前的正在工作的ReactiveEffect
 let shouldTrack = false; // 是否可以收集依赖 默认是false 在ReactiveEffect.run当中会变为trur
 const targetMap = new WeakMap(); // 用来保存依赖的对应关系
 
+// 这个类也实现watchEffect的关键
 class ReactiveEffct {
   constructor(public fn) {
     //
@@ -33,6 +34,7 @@ class ReactiveEffct {
   }
 }
 
+// 这里注意一下 effect 并不是 watchEffect
 // 通过使用我们知道 effect接收一个函数和个选项 函数内部是我们的业务逻辑相关的代码
 // options一般是我们的设置选项 比如 flush 等
 export function effect(fn, options = {}) {
@@ -41,6 +43,17 @@ export function effect(fn, options = {}) {
 
   // 把实例化后的数据和用户传入的设置合并一下
   extend(_effect, options);
+  // 执行run函数 也就是执行了可依赖收集 也执行了用户传入fn函数 (用户传入的fn函数里的所有依赖都会收集)
+  _effect.run();
+
+  // 这里把run函数方法返回 方便用户自己选择调度时机
+  // 即使如果手动调用停止函数的 我们也可以再次执行effect返回值来执行用户传进来的fn函数
+  const runner: any = _effect.run.bind(_effect);
+  // 这里的作用是为了我们手动调用停止函数的时候 会把runner传入stop参数内 通过runner来访问当前的effect 然后执行停止操作
+  // 这个runner 就是我们调用effect函数的时候返回的runner
+  runner.effect = _effect;
+
+  return runner;
 }
 
 // 收集依赖
