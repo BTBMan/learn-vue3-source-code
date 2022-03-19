@@ -7,7 +7,7 @@ import {
   readonlyMap,
   shallowReadonlyMap,
 } from './reactive';
-import { track } from './effect';
+import { track, trigger } from './effect';
 
 const set = createSetter();
 const get = createGetter();
@@ -68,6 +68,9 @@ function createGetter(isReadonly = false, shallow = false) {
 function createSetter() {
   return function (target, key, value, receiver) {
     const result = Reflect.set(target, key, value, receiver);
+
+    // setter的时候在触发依赖
+    trigger(target, 'set', key);
 
     return result;
   };

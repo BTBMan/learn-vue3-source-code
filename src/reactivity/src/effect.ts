@@ -1,11 +1,13 @@
 import { extend } from '../../shared';
+import { createDep } from './dep';
 
 let activeEffect: any = void 0; // 当前的正在工作的ReactiveEffect
-let shouldTrack = false; // 是否可以收集依赖 默认是false 在ReactiveEffect.run当中会变为trur
+let shouldTrack = false; // 是否可以收集依赖 默认是false 在ReactiveEffect.run当中会变为true
 const targetMap = new WeakMap(); // 用来保存依赖的对应关系
 
 // 这个类也实现watchEffect的关键
-class ReactiveEffct {
+class ReactiveEffect {
+  deps = []; // 用来存放当前effect的所有
   constructor(public fn) {
     //
   }
@@ -35,15 +37,15 @@ class ReactiveEffct {
 }
 
 // 这里注意一下 effect 并不是 watchEffect
-// 通过使用我们知道 effect接收一个函数和个选项 函数内部是我们的业务逻辑相关的代码
-// options一般是我们的设置选项 比如 flush 等
+// 通过使用我们知道 effect 接收一个函数和个选项 函数内部是我们的业务逻辑相关的代码
+// options 一般是我们的设置选项 比如 flush 等
 export function effect(fn, options = {}) {
   // 创建一个ReactiveEffec实例
-  const _effect = new ReactiveEffct(fn);
+  const _effect = new ReactiveEffect(fn);
 
   // 把实例化后的数据和用户传入的设置合并一下
   extend(_effect, options);
-  // 执行run函数 也就是执行了可依赖收集 也执行了用户传入fn函数 (用户传入的fn函数里的所有依赖都会收集)
+  // 执行run函数 也就是执行了依赖收集 也执行了用户传入fn函数 (用户传入的fn函数里的所有依赖都会收集)
   _effect.run();
 
   // 这里把run函数方法返回 方便用户自己选择调度时机
@@ -67,6 +69,58 @@ export function track(target, type, key) {
   // 也可以理解为须要在effect方法里才可以执行依赖收集
   if (!isTracking()) {
     return;
+  }
+
+  // 执行收集依赖动作
+  // 查看是否存在当前target的依赖
+  let depsMap = targetMap.get(target);
+
+  if (!depsMap) {
+    // 没有的话就初始化一个depsMap合集
+    depsMap = new Map();
+    targetMap.set(target, depsMap);
+  }
+
+  // 查看当前的key对应的effect函数是否存在
+  // 如果存在的话 得到的应该是一个set合集
+  let dep = depsMap.get(key);
+
+  if (!dep) {
+    // 没有的话就创建一个空的依赖set合集
+    dep = createDep();
+    depsMap.set(key, dep);
+  }
+
+  trackEffects(dep);
+}
+
+// 收集并跟踪effect
+export function trackEffects(dep) {
+  // 判断是否存在当前的effect
+  // 不存在的话则增加到dep合集里
+  if (!dep.has(activeEffect)) {
+    dep.add(activeEffect);
+    // TODO ?把dep set合集添加到当前的effect下的依赖数组当中
+    activeEffect.deps.push(dep);
+  }
+}
+
+// 触发依赖
+export function trigger(target, type, key) {
+  console.log('触发依赖了-------', target, type, key);
+  // TODO
+  // 1. 找到targetMap里的target对应的所有依赖映射
+  const depsMap = targetMap.get(target);
+  if (!depsMap) {
+    return;
+  }
+  // 2. 找到target对应的映射里对应的key的effect的set合集
+  const dep = depsMap.get(key);
+  console.log('对应的dep set---------', dep);
+  // 3. 执行合集里的effect
+  for (const effect of dep) {
+    console.log('every effect------------', effect);
+    effect.run();
   }
 }
 
